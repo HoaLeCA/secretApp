@@ -1,3 +1,4 @@
+require("dotenv").config() // need to put right at the top
 const express = require("express")
 const bodyParser = require("body-parser")
 const ejs = require("ejs")
@@ -6,6 +7,7 @@ const encrypt = require("mongoose-encryption")
 const port = 3000
 
 const app = express()
+
 app.use(express.static("public"))
 app.set('view engine', 'ejs')
 app.use(bodyParser.urlencoded({extended: true}))
@@ -21,8 +23,8 @@ const userSchema = new mongoose.Schema ({
     password: String
 })
 // need place it before user model and only encrypt password
-const secret = "Thisisourlittlesecret"
-userSchema.plugin(encrypt, {secret: secret, encryptedFields: ["password"]})
+
+userSchema.plugin(encrypt, {secret: process.env.SECRET, encryptedFields: ["password"]})
 // user model
 
 const User = new mongoose.model("User", userSchema)
